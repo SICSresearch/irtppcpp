@@ -2,8 +2,7 @@ sudo: false
 language: cpp
 compiler:
   - gcc
-script:
-  -make citest
+script: ./configure
 addons:
   apt:
     sources:

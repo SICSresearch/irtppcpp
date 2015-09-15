@@ -1,4 +1,4 @@
 #!/bin/sh
 gcc --version
 g++ --version
-alias
+make citest
