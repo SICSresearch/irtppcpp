@@ -1,0 +1,3 @@
+[submodule "include/SPGO"]
+	path = include/SPGO
+	url = https://github.com/akumabps/SPGO.git
