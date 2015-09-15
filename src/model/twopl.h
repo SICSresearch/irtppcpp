@@ -1,19 +1,21 @@
 #ifndef TWOPL_H_
 #define TWOPL_H_
 
+#include <model/model.h>
+
 namespace irtpp
 {
 
-  class twopl : public model
+  class twopl : public virtual model
   {
     public:
       double probability(double theta, Matrix<double> * z)
       {
         return 0;
       }
-      void gradient(Matrix<double> * theta, Matrix<double> * z, Matrix<double> * r, Matrix<double> * f, Matrix<double> * gradient)
+      double * gradient(Matrix<double> * z, ll_parameter param)
       {
-        ;
+        return param.gradient;
       }
   };
 

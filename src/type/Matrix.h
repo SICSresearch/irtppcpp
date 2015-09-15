@@ -42,8 +42,8 @@ namespace irtpp
   class Matrix
   {
   private:
-    unsigned int nCol;
-    unsigned int nRow;
+    int nCol;
+    int nRow;
     T m(char);
     T get3x3determinant ();
 
@@ -51,23 +51,23 @@ namespace irtpp
     //bool transposed;
     bool symmetric;
     T *memory;
-    unsigned int ld;
+    int ld;
     static char del;
-    Matrix(T**, unsigned int, unsigned int);/*Importing a 2D array*/
+    Matrix(T**, int, int);/*Importing a 2D array*/
     Matrix(); /**Empty object*/
-    Matrix(unsigned int, unsigned int); /**Two dimensional Matrix Constructor allocates memory*/
+    Matrix(int, int); /**Two dimensional Matrix Constructor allocates memory*/
     Matrix(Matrix<T>&); /**Copy constructor*/
-    Matrix(char I, unsigned int size); /**Create special kinds of matrices (dense identity)*/
+    Matrix(char I, int size); /**Create special kinds of matrices (dense identity)*/
     void reset();/**Reset method, puts all entries in zeros*/
     void transpose ();/**Transposes the matrix, notice it does not perform memory transpose, only index transpose*/
     void copy(Matrix<T>&);/**Copy constructor*/
-    unsigned int nR(); /** Returns number of rows */
-    unsigned int nC(); /** Returns number of columns */
-    void setIndex(unsigned int, unsigned int, T);
-    T getIndex(unsigned int, unsigned int);
+    int nR(); /** Returns number of rows */
+    int nC(); /** Returns number of columns */
+    void setIndex(int, int, T);
+    T getIndex(int, int);
     T sum(); /** Returns the sum of all objects */
-    inline T & operator()(const unsigned int nCol, const unsigned int nRow); /** Accessing operator for a element */
-    T & operator()(const unsigned int element); /**Accessing operator for a element */
+    inline T & operator()(const int nCol, const int nRow); /** Accessing operator for a element */
+    T & operator()(const int element); /**Accessing operator for a element */
     friend ostream& operator<<<T>(ostream &, Matrix<T> &); /** Output operator */
     bool isSymmetric() const; /** Symmetry flag for optimizations */
     void setSymmetric(bool symmetric); /** Set to true the symmetry flag */
@@ -85,24 +85,24 @@ namespace irtpp
   {
     T sum = 0;
 
-    for (unsigned int i = 0; i < nRow * nCol; i++)
+    for (int i = 0; i < nRow * nCol; i++)
     sum += memory[i];
 
     return (sum);
   }
 
   template<class T>
-  unsigned int Matrix<T>::nR() { return (nRow); }
+  int Matrix<T>::nR() { return (nRow); }
 
   template<class T>
-  unsigned int Matrix<T>::nC() { return (nCol); }
+  int Matrix<T>::nC() { return (nCol); }
 
   template<class T>
-  inline void Matrix<T>::setIndex(unsigned int r, unsigned int c, T value)
+  inline void Matrix<T>::setIndex(int r, int c, T value)
   { memory[nCol * r + c] = value; }
 
   template<class T>
-  inline T Matrix<T>::getIndex(unsigned int r, unsigned int c)
+  inline T Matrix<T>::getIndex(int r, int c)
   { return memory[nCol * r + c]; }
 
   template<class T>
@@ -124,7 +124,7 @@ namespace irtpp
   }
 
   template<class T>
-  Matrix<T>::Matrix(unsigned int r, unsigned int c)
+  Matrix<T>::Matrix(int r, int c)
   {
     nCol = c;
     nRow = r;
@@ -135,7 +135,7 @@ namespace irtpp
   }
 
   template<class T>
-  Matrix<T>::Matrix(T** mem , unsigned int r, unsigned int c)
+  Matrix<T>::Matrix(T** mem , int r, int c)
   {
     nCol = c;
     nRow = r;
@@ -144,13 +144,13 @@ namespace irtpp
     symmetric = false;
     ld = c;
 
-    for (unsigned int var = 0; var < r; ++var)
-    for (unsigned int j = 0; j < c; ++j)
+    for (int var = 0; var < r; ++var)
+    for (int j = 0; j < c; ++j)
     memory[nCol * var + j] = mem[var][j];
   }
 
   template<class T>
-  Matrix<T>::Matrix(char I, unsigned int c)
+  Matrix<T>::Matrix(char I, int c)
   {
     nCol = c;
     nRow = c;
@@ -161,24 +161,24 @@ namespace irtpp
     this->reset();
     if(I=='I')
     {
-      for(unsigned int i = 0 ; i < c ; i++)
+      for(int i = 0 ; i < c ; i++)
       (*this)(i,i)=static_cast<T>(1);
     }
 
     if(I=='R')
     {
       srand(time(NULL));
-      for(unsigned int i = 0 ; i < c*c ; i++)
+      for(int i = 0 ; i < c*c ; i++)
       memory[i] = (T)(rand())/(T)(INT_MAX);
     }
   }
 
   template<class T>
-  inline T & Matrix<T>::operator()(const unsigned int r, const unsigned int c)
+  inline T & Matrix<T>::operator()(const int r, const int c)
   { return (memory[nCol * r + c]); }
 
   template<class T>
-  T & Matrix<T>::operator()(const unsigned int el) { return (memory[el]); }
+  T & Matrix<T>::operator()(const int el) { return (memory[el]); }
 
   template<class T>
   inline bool Matrix<T>::isSymmetric() const { return (symmetric); }
@@ -210,9 +210,9 @@ namespace irtpp
   {
     // Since operator<< is a friend of the Point class, we can access
     // Point's members directly.
-    for (unsigned int i = 0; i < M.nR(); ++i)
+    for (int i = 0; i < M.nR(); ++i)
     {
-      for (unsigned int j = 0; j < M.nC(); j++)
+      for (int j = 0; j < M.nC(); j++)
       out << M(i, j) << M.del;
       out << endl;
     }
