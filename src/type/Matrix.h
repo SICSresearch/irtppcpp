@@ -14,8 +14,6 @@
 #include <cstdlib>
 #include <climits>
 
-using namespace std;
-
 namespace irtpp
 {
   /**
@@ -36,7 +34,7 @@ namespace irtpp
   * returns an ostream object
   */
   template<typename T>
-  ostream& operator<<(ostream &, Matrix<T> &);
+  std::ostream& operator<<(std::ostream &, Matrix<T> &);
 
   template<class T>
   class Matrix
@@ -68,7 +66,7 @@ namespace irtpp
     T sum(); /** Returns the sum of all objects */
     inline T & operator()(const int nCol, const int nRow); /** Accessing operator for a element */
     T & operator()(const int element); /**Accessing operator for a element */
-    friend ostream& operator<<<T>(ostream &, Matrix<T> &); /** Output operator */
+    friend std::ostream& operator<<<T>(std::ostream &, Matrix<T> &); /** Output operator */
     bool isSymmetric() const; /** Symmetry flag for optimizations */
     void setSymmetric(bool symmetric); /** Set to true the symmetry flag */
     virtual ~Matrix();
@@ -206,7 +204,7 @@ namespace irtpp
   }
 
   template<class T>
-  ostream& operator<<(ostream &out, Matrix<T> &M)
+  std::ostream& operator<<(std::ostream &out, Matrix<T> &M)
   {
     // Since operator<< is a friend of the Point class, we can access
     // Point's members directly.
@@ -214,7 +212,7 @@ namespace irtpp
     {
       for (int j = 0; j < M.nC(); j++)
       out << M(i, j) << M.del;
-      out << endl;
+      out << std::endl;
     }
 
     return (out);

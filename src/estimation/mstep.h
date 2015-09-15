@@ -2,13 +2,14 @@
 #define MSTEP_H_
 
 #include <Optimization/Unrestricted/Multivariable/BFGS.hpp>
-#include <vector>
 #include <type/parameter.h>
+#include <model/model.h>
+#include <vector>
 
 namespace irtpp
 {
 
-  void mstep();
+  void mstep(model * m);
 
 }
 

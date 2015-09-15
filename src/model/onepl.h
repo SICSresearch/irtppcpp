@@ -6,10 +6,10 @@
 namespace irtpp
 {
 
-  class onepl : public virtual model
+  class onepl : public model
   {
   public:
-    double probability(double theta, Matrix<double> * z)
+    static double probability(double theta, Matrix<double> * z)
     {
       double exponential = ((theta) - ((*z)(0,0)));
 
@@ -21,7 +21,17 @@ namespace irtpp
       return (1 / (1.0 + exp(-exponential)));
     }
 
-    double * gradient(Matrix<double> * z, ll_parameter param)
+    P_Function getP_Function()
+    {
+      return probability;
+    }
+
+    G_Function getGrad_Function()
+    {
+      return gradient;
+    }
+
+    static double * gradient(Matrix<double> * z, ll_parameter param)
     {
       Matrix<double> p(param.theta->nC(), 0);
       Matrix<double> factor(param.theta->nC(), 0);

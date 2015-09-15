@@ -1,28 +1,32 @@
 #include <estimation/mstep.h>
 
-using namespace spgo;
-
 namespace irtpp
 {
+  typedef double* (*Func)(Matrix<double> * p, ll_parameter info);
 
-typedef double* (*Function)(Matrix<double> p, ll_parameter info);
-
-  void mstep()
+  void mstep(model * m)
   {
-    Optim<Function, Matrix<double>, ll_parameter> * test;
+    spgo::Optim<Func, Matrix<double>, ll_parameter> * test;
     // Define the vector that hold the function and the gradient
-    vector<Function> f;
+    std::vector<Func> functions;
     // Define the parameters
     ll_parameter p;
 
     // Store the function
-    f.push_back(function);
+    functions.push_back(m->loglikelihood);
     // Store the gradient
-    // f.push_back(gradient);
+    functions.push_back(m->getGrad_Function());
 
-    // Store the initial values
-    // p.push_back(100);
-    // p.push_back(100);
+    /*
+    Matrix<double> * theta;
+    Matrix<double> * r;
+    Matrix<double> * f;
+    double * gradient;
+    P_Function probability;
+    */
+    // Store the values
+    //p.theta = ;
+    //p.r =
 
     // Assign the BFGS optimizer
     // test = new BFGS<Function, Parameter, Info>();

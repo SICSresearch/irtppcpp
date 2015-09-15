@@ -8,17 +8,18 @@
 
 namespace irtpp
 {
-
   class model
   {
     public:
 
       model(){}
 
-      virtual double probability(double theta, Matrix<double> * z) = 0;
-      virtual double * gradient(Matrix<double> * z, ll_parameter param) = 0;
+      // To obtain a pointer to the static probability function
+      virtual P_Function getP_Function() = 0;
+      // To obtain a pointer to the static gradient function
+      virtual G_Function getGrad_Function() = 0;
 
-      double * loglikelihood(Matrix<double> * z, ll_parameter param)
+      static double * loglikelihood(Matrix<double> * z, ll_parameter param)
       {
         double * sum = new double[1];
         double tp = 0, tq = 0;
@@ -26,7 +27,7 @@ namespace irtpp
 
         for (int k = 0; k < param.theta->nC(); ++k)
         {
-          tp = probability((*param.theta)(k,0),z);
+          tp = param.probability((*param.theta)(k,0),z);
 
           if (tp < 1e-08) tp=1e-08;
           tq = 1 - tp;
