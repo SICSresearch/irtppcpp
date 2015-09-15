@@ -1,14 +1,20 @@
-CC=g++
-CFLAGS=-c -Wall -O2
-LDFLAGS=
-SOURCES= src/main.cpp
-OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=hello
+#SRC =
+OBJ = $(SRC:.cpp=.o)
+INCL = -I./src/
+CFLAGS = -std=c++11 -Wunused-function -O3
 
-all: $(SOURCES) $(EXECUTABLE)
+all: SICS
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+#$(OBJ): %.o : %.h
 
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+#.cpp.o:
+#src/%.o: src/%.cpp
+#	g++ $(CFLAGS) -Wall -c -I./src/ -o $@ $<
+
+#SICS: $(OBJ)
+#	g++ -Wall $(CFLAGS) -I./src/ $^ src/main.cpp -o $@
+SICS:
+	g++ -Wall $(CFLAGS) -I./src/ $^ src/main.cpp -o $@
+
+#debug:
+#	g++ $(CFLAGS) -ggdb -I./src/ -o SICS_dbg $(SRC) src/main.cpp
