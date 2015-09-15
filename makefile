@@ -29,3 +29,15 @@ test:
 
 clean:
 	rm test1 SICS $(OBJ)
+
+ciconf:
+	gcc --version
+	g++ --version
+	alias
+	export CXX="g++-4.8" CC="gcc-4.8"
+	alias gcc='gcc-4.8'
+	alias cc='gcc-4.8'
+	alias g++='g++-4.8'
+	alias c++='c++-4.8'
+	gcc --version
+	g++ --version
