@@ -2,6 +2,10 @@
 OBJ = $(SRC:.cpp=.o)
 INCL = -I./src/
 CFLAGS = -std=c++11 -Wunused-function -O3
+TINCL = -I./tests/ -I./include/
+TSRC = tests/matrix.cpp \
+		tests/test.cpp
+
 
 all: SICS
 
@@ -18,3 +22,10 @@ SICS:
 
 #debug:
 #	g++ $(CFLAGS) -ggdb -I./src/ -o SICS_dbg $(SRC) src/main.cpp
+
+test:
+	g++ $(TINCL) -o $@1  $(TSRC)
+	./test1
+
+clean:
+	rm test1 SICS $(OBJ)
