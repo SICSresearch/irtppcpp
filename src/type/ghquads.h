@@ -3,19 +3,11 @@
 
 namespace irtpp
 {
-  
-  const double full_gh_quads[1] = {0};
-  const double full_gh_weigths[1] = {0};
 
-  double * quads(int i)
-  {
-    return 0;
-  }
-
-  double * weights(int i)
-  {
-  	return 0;
-  }
+  extern const double full_gh_quads[];
+  extern const double full_gh_weigths[];
+  const double * quads(int i);
+  const double * weights(int i);
 
 }
 

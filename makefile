@@ -1,4 +1,4 @@
-#SRC =
+SRC = src/type/ghquads.cpp
 OBJ = $(SRC:.cpp=.o)
 INCL = -I./src/ -I./include/SPGO/include/
 CFLAGS = -std=c++11 -Wunused-function -O3
@@ -9,16 +9,16 @@ TSRC = tests/matrix.cpp \
 
 all: SICS
 
-#$(OBJ): %.o : %.h
+$(OBJ): %.o : %.h
 
-#.cpp.o:
-#src/%.o: src/%.cpp
-#	g++ $(CFLAGS) -Wall -c -I./src/ -o $@ $<
+.cpp.o:
+src/%.o: src/%.cpp
+	g++ $(CFLAGS) -Wall -c -I./src/ -o $@ $<
 
-#SICS: $(OBJ)
-#	g++ -Wall $(CFLAGS) -I./src/ $^ src/main.cpp -o $@
-SICS:
+SICS: $(OBJ)
 	g++ -Wall $(CFLAGS) $(INCL) $^ src/main.cpp -o $@
+#SICS:
+#	g++ -Wall $(CFLAGS) $(INCL) $^ src/main.cpp -o $@
 
 #debug:
 #	g++ $(CFLAGS) -ggdb -I./src/ -o SICS_dbg $(SRC) src/main.cpp
