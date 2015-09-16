@@ -100,7 +100,7 @@ namespace irtpp{
       {
         j = 0;
 
-        for (it2 = it->first.begin(); it2 != it->first.end(); ++it2, ++j)
+        for (auto it2 = it->first.begin(); it2 != it->first.end(); ++it2, ++j)
         {
           (*bitset_list)(counter, j) = it2;
         }
