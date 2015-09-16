@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <type/Matrix.h>
 
 namespace irtpp
 {
@@ -12,11 +13,11 @@ class dataset
 
 public:
 
-    unsigned int size;
+    int size;
     std::map<std::vector<char>, int> matrix;
     Matrix<char>* bitset_list;
     int * count_set_bits;
-    int * frequency_list;
+    Matrix<int> * frequency_list;
 
     //Constructor
     dataset(int size);

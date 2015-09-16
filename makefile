@@ -1,4 +1,6 @@
-SRC = src/type/ghquads.cpp
+SRC = src/type/ghquads.cpp \
+	src/utils/Input.cpp \
+	src/type/dataset.cpp
 OBJ = $(SRC:.cpp=.o)
 INCL = -I./src/ -I./include/SPGO/include/
 CFLAGS = -std=c++11 -Wunused-function -O3
