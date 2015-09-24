@@ -16,8 +16,8 @@ public:
     int size;
     std::map<std::vector<char>, int> matrix;
     Matrix<char>* bitset_list;
-    int * count_set_bits;
     Matrix<int> * frequency_list;
+    int * count_set_bits;
 
     //Constructor
     dataset(int size);

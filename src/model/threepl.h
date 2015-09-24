@@ -9,7 +9,7 @@ namespace irtpp
   class threepl : public model
   {
     public:
-      static double probability(double theta, Matrix<double> * z)
+      static double probability(double theta, double* z)
       {
         return 0;
       }
@@ -24,7 +24,7 @@ namespace irtpp
         return gradient;
       }
 
-      static double * gradient(Matrix<double> * z, ll_parameter param)
+      static double * gradient(double* z, ll_parameter param)
       {
         return param.gradient;
       }

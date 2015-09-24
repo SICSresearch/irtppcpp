@@ -91,7 +91,7 @@ namespace irtpp{
       int msize = matrix.size();
       bitset_list = new Matrix<char>(msize,size);
 
-      frequency_list = new Matrix<int>(msize,0);
+      frequency_list = new Matrix<int>(msize,1);
 
       int counter = 0;
       int j;
@@ -102,7 +102,7 @@ namespace irtpp{
 
         for (auto it2 = it->first.begin(); it2 != it->first.end(); ++it2, ++j)
         {
-          (*bitset_list)(counter, j) = it2;
+          (*bitset_list)(counter, j) = *it2;
         }
 
         (*frequency_list)(counter,0) = it->second;

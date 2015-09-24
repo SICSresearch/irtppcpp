@@ -8,36 +8,36 @@
 #include "Input.h"
 
 namespace irtpp{
-
+using namespace std;
 Input::Input() { del = ','; }
 
 Input::~Input() {}
 
-bool Input::importCSV(char* filename, Matrix<double>& M,   int rowIdx,   int colIdx)
+bool Input::importCSV(char* filename, Matrix<double>& M, int rowIdx, int colIdx)
 {
 	bool eof = false;
 	int row = 0;
 	int col = 0;
 
-	std::ifstream inFile;
+	ifstream inFile;
 
 	inFile.open(filename, std::ifstream::in);
 	if (!inFile.good())
 	{
-		std::cout << "File does not exists:" << filename << std::endl;
+		cout << "File does not exists:" << filename << endl;
 	}
 
 	// currentLine holds the characters of the current line to read
-	std::string currentLine;
+	string currentLine;
 
 	// Header lines are ignored
-	for (  int i = 0; i < rowIdx; i++)
+	for (int i = 0; i < rowIdx; i++)
 	{
 		//cout << "Ignored a header line : " << endl;
 		getline(inFile, currentLine);
 		//cout << currentLine << endl;
 	}
-
+	
 	while (!eof)
 	{
 		getline(inFile, currentLine);
@@ -45,16 +45,16 @@ bool Input::importCSV(char* filename, Matrix<double>& M,   int rowIdx,   int col
 		eof = inFile.eof();
 
 		const char* processLine = currentLine.c_str();
-
+		
 		if (strlen(processLine) == 0)
 		{
 			eof = true;
 			//cout << "Unproper end of file, read cancelled" << endl;
 			break;
 		}
-
+		
 		//Clean string of the ignored columns
-		for (  int k = 0; k < colIdx; ++k)
+		for (int k = 0; k < colIdx; ++k)
 		{
 			processLine = strchr(processLine, del);
 			processLine = &processLine[1]; //Skip one character
@@ -84,11 +84,11 @@ bool Input::importCSV(char* filename, Matrix<double>& M,   int rowIdx,   int col
 /*
  * Imports a CSV file whose elements repeat and generally is composed of only zeroes and ones.
  */
-bool Input::importCSV(char* filename, dataset& M,   int rowIdx,   int colIdx)
+bool Input::importCSV(char* filename, dataset& M, int rowIdx, int colIdx)
 {
-	std::ifstream inFile;
+	ifstream inFile;
 	bool eof;
-	std::string currentLine; // currentLine holds the characters of the current line to read
+	string currentLine; // currentLine holds the characters of the current line to read
 	int linelen;
 	int line;
 	eof = false;
@@ -97,16 +97,16 @@ bool Input::importCSV(char* filename, dataset& M,   int rowIdx,   int colIdx)
 
 	if (!inFile.good())
 	{
-		std::cout << "File does not exists:" << filename << std::endl;
+		cout << "File does not exists:" << filename << endl;
 	}
 
 	// Header lines are ignored
-	for (  int i = 0; i < rowIdx; i++)
+	for (int i = 0; i < rowIdx; i++)
 		getline(inFile, currentLine);
 
 	line = 0;
 	linelen = 0;
-
+	
 	while (!eof)
 	{
 		int i = 0;
@@ -127,9 +127,9 @@ bool Input::importCSV(char* filename, dataset& M,   int rowIdx,   int colIdx)
 		eof = inFile.eof();
 
 		const char* processLine = currentLine.c_str();
-
+		
 		//Clean string of the ignored columns
-		for (  int k = 0; k < colIdx; ++k)
+		for (int k = 0; k < colIdx; ++k)
 		{
 			processLine = strchr(processLine, del);
 			processLine = &processLine[1]; //Skip one character
@@ -143,7 +143,7 @@ bool Input::importCSV(char* filename, dataset& M,   int rowIdx,   int colIdx)
 			i++;
 		}
 
-		std::vector<char> dset(dlen);
+		vector<char> dset(dlen);
 		M.size = dlen;
 		i = 0;
 		chars = 0;

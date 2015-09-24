@@ -9,9 +9,13 @@ namespace irtpp
   class onepl : public model
   {
   public:
-    static double probability(double theta, Matrix<double> * z)
+
+    onepl(){}
+    ~onepl(){}
+    
+    static double probability(double theta, double* z)
     {
-      double exponential = ((theta) - ((*z)(0,0)));
+      double exponential = ((theta) - (z[0]));
 
       if (exponential > 35)
         exponential = 35;
@@ -31,7 +35,7 @@ namespace irtpp
       return gradient;
     }
 
-    static double * gradient(Matrix<double> * z, ll_parameter param)
+    static double * gradient(double* z, ll_parameter param)
     {
       Matrix<double> p(param.theta->nC(), 0);
       Matrix<double> factor(param.theta->nC(), 0);
@@ -40,8 +44,9 @@ namespace irtpp
 
       for (int k = 0; k < param.theta->nC(); k++)
       {
-        p(k,0) = probability((*(param.theta))(k,0), z);
-        factor(k,0) = (((*(param.r))(k,0)) - ((*(param.f))(k,0))*(p(k,0)));
+        //std::cout << (*(param.theta))(0,k) << std::endl;
+        p(k,0) = probability((*(param.theta))(0,k), z);
+        factor(k,0) = (((*(param.r))(0,k)) - ((*(param.f))(0,k))*(p(k,0)));
       }
 
       for (int k = 0; k < param.theta->nC(); k++ )

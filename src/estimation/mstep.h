@@ -8,8 +8,9 @@
 
 namespace irtpp
 {
+  typedef double* (*Func)(double * p, ll_parameter info);
 
-  void mstep(model * m);
+  void mstep(model * m, Matrix<double> & z, m_parameter param);
 
 }
 

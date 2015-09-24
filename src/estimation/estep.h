@@ -10,7 +10,7 @@
 namespace irtpp
 {
 
-  void estep(model * m, Matrix<double> * f, Matrix<double> * r, Matrix<double> * weights, dataset * d);
+  void estep(e_parameter param);
 
 }
 
