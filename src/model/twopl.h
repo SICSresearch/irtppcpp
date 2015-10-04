@@ -9,9 +9,20 @@ namespace irtpp
   class twopl : public model
   {
     public:
+
+      void transform(Matrix<double>*){}
+      void untransform(Matrix<double>*){}
+      
       static double probability(double theta, double* z)
       {
-        return 0;
+        double exponential = (z[0] * theta) + z[1];
+
+        if (exponential > 35)
+          exponential = 35;
+        else if (exponential < -35)
+          exponential = -35;
+
+        return (1 / (1 + exp(-exponential)));
       }
 
       P_Function getP_Function()
@@ -26,7 +37,42 @@ namespace irtpp
 
       static double* gradient(double* z, ll_parameter param)
       {
+        double p;
+        double factor;
+
+        param.gradient[0] = 0;
+        param.gradient[1] = 0;
+
+        for (int k = 0; k < param.theta->nC(); k++)
+        {
+          p = probability((*(param.theta))(0,k), z);
+          factor = (((*(param.r))(k,param.index)) - ((*(param.f))(k,0))*(p));
+          
+          param.gradient[0] -= factor * (*(param.theta))(0,k);
+          param.gradient[1] -= factor;
+        }
+
         return param.gradient;
+      }
+
+      Matrix<double>* getZ(int items)
+      {
+        return new Matrix<double>(items, 2);
+      }
+
+      int getParamSize()
+      {
+        return 2;
+      }
+
+      void printZ(Matrix<double>* z,  int items)
+      {
+        for(int i = 0; i < items; i++)
+        {
+          std::cout << (*z)(i, 0) << " ";
+          std::cout << -(*z)(i, 1)/(*z)(i, 0) << " ";
+          std::cout << 0 << std::endl;
+        }
       }
   };
 

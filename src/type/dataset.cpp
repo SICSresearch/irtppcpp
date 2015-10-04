@@ -21,6 +21,9 @@ namespace irtpp{
 
   dataset::~dataset()
   {
+    delete bitset_list;
+    delete [] count_set_bits;
+    delete frequency_list;
   }
 
   int dataset::countItems() const { return ((matrix.empty()) ? 0 : size); }

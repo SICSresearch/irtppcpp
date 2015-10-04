@@ -15,11 +15,13 @@ namespace irtpp
   
   struct ll_parameter
   {
-    Matrix<double> * theta;
-    Matrix<double> * r;
-    Matrix<double> * f;
-    double * gradient;
-    P_Function probability;
+    Matrix<double>* theta;
+    Matrix<double>* r;
+    Matrix<double>* f;
+    double*         gradient;
+    double*         sum;
+    P_Function      probability;
+    int             index;
   };
 
   // Definition of a probability function
@@ -31,23 +33,26 @@ namespace irtpp
 
   struct e_parameter
   {
-    Matrix<double> * f;
-    Matrix<double> * r;
-    Matrix<double> * weights;
-    Matrix<double> * probability;
-    dataset * d;
+    Matrix<double>* f;
+    Matrix<double>* r;
+    Matrix<double>* weight;
+    Matrix<double>* probability;
+    dataset*        d;
+    double*         faux;
+    int*            counter_temp;
   };
 
   struct m_parameter
   {
-    Matrix<double> * f;
-    Matrix<double> * r;
-    Matrix<double> * weights;
-    Matrix<double> * theta;
-    double * gradient;
-    dataset * d;
-    int items;
-    int dims;
+    Matrix<double>* f;
+    Matrix<double>* r;
+    Matrix<double>* weight;
+    Matrix<double>* theta;
+    double*         gradient;
+    double*         sum;
+    dataset*        d;
+    int             items;
+    int             param_size;
   };
 
 }

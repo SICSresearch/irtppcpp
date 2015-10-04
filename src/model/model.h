@@ -19,11 +19,22 @@ namespace irtpp
       // To obtain a pointer to the static gradient function
       virtual G_Function getGrad_Function() = 0;
 
-      static double * loglikelihood(double* z, ll_parameter param)
+      virtual Matrix<double>* getZ(int) = 0;
+
+      virtual int getParamSize() = 0;
+
+      virtual void printZ(Matrix<double>*, int) = 0;
+
+      virtual void transform(Matrix<double>*) = 0;
+
+      virtual void untransform(Matrix<double>*) = 0;
+
+      virtual void setInitialValues(Matrix<double>*) = 0;
+
+      static double* loglikelihood(double* z, ll_parameter param)
       {
-        double * sum = new double[1];
         double tp = 0, tq = 0;
-        sum[0] = 0;
+        param.sum[0] = 0;
 
         for (int k = 0; k < param.theta->nC(); ++k)
         {
@@ -33,17 +44,13 @@ namespace irtpp
           tq = 1 - tp;
           if (tq < 1e-08) tq=1e-08;
 
-          // std::cout << "(*(param.r))(0," << k << ")→";
-          // std::cout << (*(param.r))(0,k) << std::endl;
-          // std::cout << "(*(param.f))(0," << k << ")→";
-          // std::cout << (*(param.f))(0,k) << std::endl;
-
-          sum[0] += (((*(param.r))(0,k))*log(tp))+(((*(param.f))(0,k)) - ((*(param.r))(0,k)))*log(tq);
+          param.sum[0] += (((*(param.r))(k,param.index))*log(tp))+(((*(param.f))(k,0))
+                           - ((*(param.r))(k,param.index)))*log(tq);
         }
 
-        sum[0] = -sum[0];
+        param.sum[0] = -param.sum[0];
 
-        return (sum);
+        return (param.sum);
       }
 
       virtual ~model(){}

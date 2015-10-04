@@ -36,71 +36,94 @@ int main(int argc, char ** argv)
   model*          m;
   dataset*        d;
   int             items;
-  int             dims;
-  double		  theta_d;
+  int             param_size;
+  double*         gradient;
+  double*         sum;
+  double*         faux;
+  int*            counter_temp;
 
-  d = new dataset(0);
+  d =           new dataset(0);
   input.importCSV(argv[1], *d, 1, 0);
   probability = new Matrix<double>(41, d->size);
 
-  items = d->size;
-  dims = 1;
-  m = new onepl();
+  items =       d->size;
+  m =           new threepl();
+  param_size =  m->getParamSize();
 
-  f = new Matrix<double>(1, 41);
-  r = new Matrix<double>(41, items);
-  theta = new Matrix<double>(1, 41);
-  weight = new Matrix<double>(1, 41);
+  f =           new Matrix<double>(41, 1);
+  r =           new Matrix<double>(41, items);
+  theta =       new Matrix<double>(1, 41);
+  weight =      new Matrix<double>(1, 41);
 
-  z = new Matrix<double>(items, 3);
+  z =           m->getZ(items);
   z->reset();
+
+  gradient =     new double[param_size]{0};
+  sum =          new double[1]{0};
+  faux =         new double[weight->nC()];
+  counter_temp = new int[d->countItems()];
 
   for (int k = 0; k < cuad.nR(); k++)
   {
-    (*theta)(0, k) = cuad(k, 0);
+    (*theta)(0, k) =  cuad(k, 0);
     (*weight)(0, k) = cuad(k, 1);
   }
 
-  for (int k = 0; k < 41; k++)
+  p1.f =            f;
+  p1.r =            r;
+  p1.weight =       weight;
+  p1.probability =  probability;
+  p1.d =            d;
+  p1.faux =         faux;
+  p1.counter_temp = counter_temp;
+
+  // Set the initial values
+  m->setInitialValues(z);
+
+  p2.f =           f;	
+  p2.r =           r;
+  p2.d =           d;
+  p2.weight =      weight;
+  p2.theta =       theta;
+  p2.items =       items;
+  p2.param_size =  param_size;
+  p2.gradient =    gradient;
+  p2.sum =         sum;
+
+  m->transform(z);
+
+  for (;!(iterations++ > 65);)
   {
-    for (int i = 0; i < items; i++)
+    cout << iterations << endl;
+
+    for (int k = 0; k < 41; k++)
     {
-      theta_d = (*theta)(0, k);
-      //cout << "(" << 0 << ", " << k << ")" << theta_d << endl;
-      (*probability)(k, i) = m->getP_Function()(theta_d, z->memory[i]);
+      for (int i = 0; i < items; i++)
+      {
+        (*probability)(k, i) = m->getP_Function()((*theta)(0, k), z->memory[i]);
+      }
     }
-  }
 
-  p1.f = f;
-  p1.r = r;
-  p1.weights = weight;
-  p1.probability = probability;
-  p1.d = d;
-
-  p2.f = f;	
-  p2.r = r;
-  p2.d = d;
-  p2.weights = weight;
-  p2.theta = theta;
-  p2.items = items;
-  p2.dims = dims;
-  p2.gradient = new double[1]{0};
-
-  for (;!(iterations++ > 200);)
-  {
-//  cout << iterations << endl;
   	estep(p1);
   	mstep(m, *z, p2);
   }
 
-  for(int i = 0; i < d->size; i++)
-  {
-  	cout << (*z)(i, 0) << " ";
-  	cout << (*z)(i, 1) << " ";
-    cout << (*z)(i, 2) << endl;
-  }
-  
-  cout << "Gradient: " << p2.gradient[0] << endl;
+  m->untransform(z);
+
+  m->printZ(z, d->size);
+
+  delete m;
+  delete f;
+  delete r;
+  delete weight;
+  delete theta;
+  delete probability;
+  delete z;
+  delete d;
+  delete [] gradient;
+  delete [] sum;
+  delete [] faux;
+  delete [] counter_temp;
 
   return 0;
 }

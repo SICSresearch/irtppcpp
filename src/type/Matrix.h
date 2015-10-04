@@ -165,7 +165,7 @@ template<class T>
 Matrix<T>::~Matrix()
 {
   for(int i = 0; i < nRow; i++)
-    delete memory[i];
+    delete [] memory[i];
   delete[] memory;
 }
 

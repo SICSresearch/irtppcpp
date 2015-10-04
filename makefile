@@ -32,4 +32,4 @@ test:
 	./test1
 
 clean:
-	rm test1 SICS $(OBJ)
+	rm SICS $(OBJ)
