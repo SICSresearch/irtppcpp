@@ -5,6 +5,8 @@
 #include <type/parameter.h>
 #include <cmath>
 #include <vector>
+#include <utils/andrade.h>
+#include <utils/asa111.h>
 
 namespace irtpp
 {
@@ -29,7 +31,7 @@ namespace irtpp
 
       virtual void untransform(Matrix<double>*) = 0;
 
-      virtual void setInitialValues(Matrix<double>*) = 0;
+      virtual void setInitialValues(Matrix<double>*, dataset* data) = 0;
 
       static double* loglikelihood(double* z, ll_parameter param)
       {

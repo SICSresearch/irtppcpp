@@ -32,6 +32,19 @@ namespace irtpp
         }
       }
 
+      void setInitialValues(Matrix<double>* z, dataset* data)
+      {
+        double * result = Andrade(data);
+        int ifault;
+      
+        for (int i = 0; i < data->size; i++)
+        {
+          (*z)(i, 0) = std::sqrt((result[1] * result[1]) / (1.0 - result[1] * result[1]));
+          (*z)(i, 1) = -(ppnd(result[0], &ifault)) / result[1];
+          (*z)(i, 2) = 0.2;
+        }
+      }
+
       static double probability(double theta, double* z)
       {
         double exponential = (z[0]*theta+z[1]);
