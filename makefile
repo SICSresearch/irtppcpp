@@ -2,10 +2,11 @@ SRC = src/type/ghquads.cpp \
 	src/utils/Input.cpp \
 	src/type/dataset.cpp \
 	src/estimation/estep.cpp \
-	src/estimation/mstep.cpp
+	src/estimation/mstep.cpp \
+        src/utils/asa111.cpp
 OBJ = $(SRC:.cpp=.o)
 INCL = -I./src/ -I./include/SPGO/include/
-CFLAGS = -std=c++11 -Wunused-function -g2
+CFLAGS = -std=c++11 -Wunused-function -O3 
 TINCL = -I./tests/ -I./include/
 TSRC = tests/matrix.cpp \
 		tests/test.cpp
