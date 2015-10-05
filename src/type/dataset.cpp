@@ -60,7 +60,7 @@ namespace irtpp{
     }
   }
 
-  int dataset::countBitSet(Matrix<char> * bitset, int index)
+  int dataset::countBitSet(Matrix<char>* bitset, int index)
   {
     //When the pointer is not set yet, set it by flipping all to -1, this means they are not yet counted
     if (count_set_bits == NULL)
