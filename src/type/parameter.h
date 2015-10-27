@@ -12,16 +12,18 @@ namespace irtpp
   // 2nd parameter, the z parameters
   // return the result of the probability according to the model
   typedef double (*P_Function)(double, double*);
+  typedef void (*Boundary_Function)(double*);
   
   struct ll_parameter
   {
-    Matrix<double>* theta;
-    Matrix<double>* r;
-    Matrix<double>* f;
-    double*         gradient;
-    double*         sum;
-    P_Function      probability;
-    int             index;
+    Matrix<double>*   theta;
+    Matrix<double>*   r;
+    Matrix<double>*   f;
+    double*           gradient;
+    double*           sum;
+    P_Function        probability;
+    Boundary_Function boundary;
+    int               index;
   };
 
   // Definition of a probability function

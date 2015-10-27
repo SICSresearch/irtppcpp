@@ -21,6 +21,8 @@ namespace irtpp
       // To obtain a pointer to the static gradient function
       virtual G_Function getGrad_Function() = 0;
 
+      virtual Boundary_Function getBoundary_Function() = 0;
+
       virtual Matrix<double>* getZ(int) = 0;
 
       virtual int getParamSize() = 0;
@@ -33,18 +35,33 @@ namespace irtpp
 
       virtual void setInitialValues(Matrix<double>*, dataset* data) = 0;
 
+      virtual void calculateError(double& max_diff, Matrix<double>* z, Matrix<double>* z_temp, int size) = 0;
+
+      virtual void savePrevValues(Matrix<double>* z, Matrix<double>* z_temp, int size) = 0;
+
       static double* loglikelihood(double* z, ll_parameter param)
       {
-        double tp = 0, tq = 0;
-        param.sum[0] = 0;
+        double tp = 0,
+               tq = 0;
+               param.sum[0] = 0;
+
+        //std::cout << "b: " << z[0] << std::endl;
+        param.boundary(z);
+        //std::cout << "b: " << z[0] << std::endl;
 
         for (int k = 0; k < param.theta->nC(); ++k)
         {
           tp = param.probability((*param.theta)(0,k),z);
 
-          if (tp < 1e-08) tp=1e-08;
+          if (tp < 1e-08)
+          {
+            tp = 1e-08;
+          }
           tq = 1 - tp;
-          if (tq < 1e-08) tq=1e-08;
+          if (tq < 1e-08)
+          {
+            tq=1e-08;
+          }
 
           param.sum[0] += (((*(param.r))(k,param.index))*log(tp))+(((*(param.f))(k,0))
                            - ((*(param.r))(k,param.index)))*log(tq);

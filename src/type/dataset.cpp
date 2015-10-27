@@ -22,8 +22,8 @@ namespace irtpp{
   dataset::~dataset()
   {
     delete bitset_list;
-    delete [] count_set_bits;
     delete frequency_list;
+    delete[] count_set_bits;
   }
 
   int dataset::countItems() const { return ((matrix.empty()) ? 0 : size); }
@@ -53,9 +53,9 @@ namespace irtpp{
     {
       for (int var = 0; var < size; ++var)
       {
-        int k = iterator->first[var];
-        std::cout << k;
+        std::cout << iterator->first[var];
       }
+
       std::cout << " " << iterator->second << std::endl;
     }
   }
@@ -67,7 +67,9 @@ namespace irtpp{
     {
       count_set_bits = new int[matrix.size()];
       for (uint i = 0; i < matrix.size(); i++)
-      count_set_bits[i] = -1;
+      {
+        count_set_bits[i] = -1;
+      }
     }
 
     //So, the pointer was initialized but the index is not counted for this entry
@@ -77,8 +79,12 @@ namespace irtpp{
     {
       count_set_bits[index] = 0;
       for (int i = 0; i < size; i++)
-      if ((*bitset)(index,i))
-      count_set_bits[index]++;
+      {
+        if ((*bitset)(index,i))
+        {
+          count_set_bits[index]++;
+        }
+      }
     }
 
     return (count_set_bits[index]);
@@ -91,9 +97,10 @@ namespace irtpp{
       std::map<std::vector<char>, int>::const_iterator it;
       std::map<std::vector<char>, int>::const_iterator begin = matrix.begin();
       std::map<std::vector<char>, int>::const_iterator end = matrix.end();
-      int msize = matrix.size();
-      bitset_list = new Matrix<char>(msize,size);
 
+      int msize = matrix.size();
+      
+      bitset_list = new Matrix<char>(msize,size);
       frequency_list = new Matrix<int>(msize,1);
 
       int counter = 0;
@@ -112,14 +119,17 @@ namespace irtpp{
       }
     }
 
-    return bitset_list;
+    return (bitset_list);
   }
 
   Matrix<int> * dataset::getFrequencyList()
   {
     if (bitset_list == NULL)
-    getBitsetList();
-    return frequency_list;
+    {
+      getBitsetList();
+    }
+
+    return (frequency_list);
   }
 
 }

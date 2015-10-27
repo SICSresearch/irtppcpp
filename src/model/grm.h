@@ -1,26 +1,17 @@
-#ifndef TWOPL_H_
-#define TWOPL_H_
+#ifndef GRM_H_
+#define GRM_H_
 
-#include <model/model.h>
+#include <estimation/estep.h>
+#include <type/parameter.h>
 
 namespace irtpp
 {
 
-  class twopl : public model
+  class grm : public model
   {
     public:
-      static void boundary(double* z)
-      {
-        // if(abs(z[0]) > 5)
-        // {
-        //   z[0] = 0.851;
-        // }
-        // double dd = -z[1]/z[0];
-        // if(abs(dd)>5)
-        // {
-        //   z[1] = 0;
-        // }
-      }
+
+      static void boundary(double* z) {}
 
       Boundary_Function getBoundary_Function()
       {
@@ -30,36 +21,23 @@ namespace irtpp
       void transform(Matrix<double>*){}
       void untransform(Matrix<double>* z)
       {
-        for (int i = 0; i < z->nR(); ++i)
-        {
-          (*z)(i, 1) = -(*z)(i, 1)/(*z)(i, 0);
-        }
       }
 
       void setInitialValues(Matrix<double>* z, dataset* data)
       {
-        double * result = Andrade(data);
-        int ifault;
-
-        for (int i = 0; i < data->size; i++)
-        {
-          (*z)(i, 0) = std::sqrt((result[1] * result[1]) / (1.0 - result[1] * result[1]));
-          (*z)(i, 1) = -(ppnd(result[0], &ifault)) / result[1];
-        }
-
-        delete[] result;
+        // ToDo
       }
 
       static double probability(double theta, double* z)
       {
-        double exponential = (z[0] * theta) + z[1];
+        double exponential = exp((theta-z[1])*z[0]);
 
         if (exponential > 35)
           exponential = 35;
         else if (exponential < -35)
           exponential = -35;
 
-        return (1 / (1 + exp(-exponential)));
+        return exponential/(1+exponential);
       }
 
       P_Function getP_Function()
@@ -124,15 +102,6 @@ namespace irtpp
           max_diff = t > max_diff ? t : max_diff;
           t =        fabs((*z_temp)(i, 1) - (*z)(i, 1));
           max_diff = t > max_diff ? t : max_diff;
-        }
-      }
-
-      void savePrevValues(Matrix<double>* z, Matrix<double>* z_temp, int size)
-      {
-        for(int i = 0; i < size; i++)
-        {
-          (*z_temp)(i, 0) = (*z)(i, 0);
-          (*z_temp)(i, 1) = (*z)(i, 1);
         }
       }
   };

@@ -43,8 +43,8 @@ public:
     //DataSet implementations
     int countItems () const;
     int countIndividuals () const;
-    Matrix<char> * getBitsetList();
-    Matrix<int> * getFrequencyList();
+    Matrix<char>* getBitsetList();
+    Matrix<int>* getFrequencyList();
 
     //Destructor
     ~dataset();

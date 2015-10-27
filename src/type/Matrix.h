@@ -56,8 +56,8 @@ public:
   void reset();/**Reset method, puts all entries in zeros*/
   void transpose ();/**Transposes the matrix, notice it does not perform memory transpose, only index transpose*/
   void copy(Matrix<T>&);/**Copy constructor*/
-  int nR(); /** Returns number of rows */
-  int nC(); /** Returns number of columns */
+  int & nR(); /** Returns number of rows */
+  int & nC(); /** Returns number of columns */
   void setIndex(int, int, T);
   T getIndex(int, int);
   T sum(); /** Returns the sum of all objects */
@@ -85,10 +85,10 @@ T Matrix<T>::sum()
 }
 
 template<class T>
-int Matrix<T>::nR() { return (nRow); }
+int & Matrix<T>::nR() { return (nRow); }
 
 template<class T>
-int Matrix<T>::nC() { return (nCol); }
+int & Matrix<T>::nC() { return (nCol); }
 
 template<class T>
 inline void Matrix<T>::setIndex(int r, int c, T value)
