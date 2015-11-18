@@ -2,33 +2,77 @@
 #define MODEL_H_
 
 #include <type/Matrix.h>
+#include <type/parameter.h>
+#include <cmath>
+#include <vector>
+#include <utils/andrade.h>
+#include <utils/asa111.h>
 
 namespace irtpp
 {
-
   class model
   {
     public:
-      virtual double probability(double theta, Matrix<double> * z) = 0;
-      virtual void gradient(Matrix<double> *theta, Matrix<double> * z, Matrix<double> * r, Matrix<double> * f, Matrix<double> * gradient) = 0;
 
-      double loglikelihood(Matrix<double> * theta, Matrix<double> * z, Matrix<double> * r, Matrix<double> * f)
+      model(){}
+
+      // To obtain a pointer to the static probability function
+      virtual P_Function getP_Function() = 0;
+      // To obtain a pointer to the static gradient function
+      virtual G_Function getGrad_Function() = 0;
+
+      virtual Boundary_Function getBoundary_Function() = 0;
+
+      virtual Matrix<double>* getZ(int) = 0;
+
+      virtual int getParamSize() = 0;
+
+      virtual void printZ(Matrix<double>*, int) = 0;
+
+      virtual void transform(Matrix<double>*) = 0;
+
+      virtual void untransform(Matrix<double>*) = 0;
+
+      virtual void setInitialValues(Matrix<double>*, dataset* data) = 0;
+
+      virtual void calculateError(double& max_diff, Matrix<double>* z, Matrix<double>* z_temp, int size) = 0;
+
+      virtual void savePrevValues(Matrix<double>* z, Matrix<double>* z_temp, int size) = 0;
+
+      static double* loglikelihood(double* z, ll_parameter param)
       {
-        double sum = 0, tp = 0, tq = 0;
+        double tp = 0,
+               tq = 0;
+               param.sum[0] = 0;
 
-        for (unsigned int k = 0; k < theta->nC(); ++k)
+        //std::cout << "b: " << z[0] << std::endl;
+        param.boundary(z);
+        //std::cout << "b: " << z[0] << std::endl;
+
+        for (int k = 0; k < param.theta->nC(); ++k)
         {
-          tp = probability((*theta)(k,0),z);
+          tp = param.probability((*param.theta)(0,k),z);
 
-          if (tp < 1e-08) tp=1e-08;
+          if (tp < 1e-08)
+          {
+            tp = 1e-08;
+          }
           tq = 1 - tp;
-          if (tq < 1e-08) tq=1e-08;
+          if (tq < 1e-08)
+          {
+            tq=1e-08;
+          }
 
-          sum += (((*r)(k,0))*log(tp))+(((*f)(k,0)) - ((*r)(k,0)))*log(tq);
+          param.sum[0] += (((*(param.r))(k,param.index))*log(tp))+(((*(param.f))(k,0))
+                           - ((*(param.r))(k,param.index)))*log(tq);
         }
 
-        return (-sum);
+        param.sum[0] = -param.sum[0];
+
+        return (param.sum);
       }
+
+      virtual ~model(){}
   };
 
 }
