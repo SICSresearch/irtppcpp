@@ -30,7 +30,13 @@ SICS: $(OBJ)
 
 test:
 	g++ $(TINCL) -o $@1  $(TSRC)
-	./test1
+	./$@1
+	rm $@1
 
 clean:
 	rm SICS $(OBJ)
+	rm test1 SICS $(OBJ)
+
+citest:
+	g++-4.8 $(TINCL) $(CFLAGS) -o $@1  $(TSRC)
+	./$@1

@@ -1,1 +1,4 @@
-##
+#!/bin/sh
+gcc --version
+g++ --version
+make citest
