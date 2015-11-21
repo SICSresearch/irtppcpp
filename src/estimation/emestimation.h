@@ -38,20 +38,20 @@ namespace irtpp
       emestimation(model* m, dataset* d)
       {
         iterations =   0;
-        Matrix<double> cuad(41, 2);
-        input.importCSV((char *) "Cuads.csv", cuad, 1, 0);
+        qnodes = 40;
+        Matrix<double> cuad(qnodes, 2);
 
         this->d = d;
-        probability =  new Matrix<double>(41, d->size);
+        probability =  new Matrix<double>(qnodes, d->size);
 
-        items =        d->size;
-        this->m =      m;
+        items =  d->size;
+        this->m =  m;
         param_size =   m->getParamSize();
 
-        f =            new Matrix<double>(41, 1);
-        r =            new Matrix<double>(41, items);
-        theta =        new Matrix<double>(1, 41);
-        weight =       new Matrix<double>(1, 41);
+        f =            new Matrix<double>(qnodes, 1);
+        r =            new Matrix<double>(qnodes, items);
+        theta =    new Matrix<double>(1, qnodes);
+        weight =  new Matrix<double>(1, qnodes);
 
         z =            m->getZ(items);
         z_temp =       m->getZ(items);
@@ -62,12 +62,11 @@ namespace irtpp
         faux =         new double[weight->nC()];
         counter_temp = new int[d->countItems()];
 
-        for (int k = 0; k < cuad.nR(); k++)
+        for (int k = 0; k < qnodes; k++)
         {
-          (*theta)(0, k) =  cuad(k, 0);
-          (*weight)(0, k) = cuad(k, 1);
+          (*theta)(0, k) =  quads(qnodes)[k];
+          (*weight)(0, k) = weights(qnodes)[k];
         }
-
         p1.f =            f;
         p1.r =            r;
         p1.weight =       weight;
@@ -94,7 +93,7 @@ namespace irtpp
 
       void updateProbabilityMatrix()
       {
-        for (int k = 0; k < 41; k++)
+        for (int k = 0; k < qnodes; k++)
         {
 
           for (int i = 0; i < items; i++)
@@ -180,8 +179,9 @@ namespace irtpp
       }
 
 
-    private:
+private:
       int iterations;
+      int qnodes;
       Input input;
       Matrix<double>* f;
       Matrix<double>* r;
