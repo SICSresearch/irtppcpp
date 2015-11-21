@@ -76,7 +76,7 @@ namespace irtpp
         p1.faux =         faux;
         p1.counter_temp = counter_temp;
 
-        p2.f =            f;	
+        p2.f =            f;
         p2.r =            r;
         p2.d =            d;
         p2.weight =       weight;
@@ -85,6 +85,11 @@ namespace irtpp
         p2.param_size =   param_size;
         p2.gradient =     gradient;
         p2.sum =          sum;
+      }
+
+      Matrix<double>* coef()
+      {
+        return z;
       }
 
       void updateProbabilityMatrix()
@@ -105,7 +110,7 @@ namespace irtpp
       void ** estimate()
       {
         void ** return_list = new void*[3];
-        
+
         Matrix<double>* state[3];
 
         state[0] = m->getZ(items);
@@ -116,13 +121,13 @@ namespace irtpp
         state[1]->reset();
         state[2]->reset();
 
-        bool convergenceSignal = false; 
+        bool convergenceSignal = false;
 
         m->setInitialValues(z, d);
 
         std::cout << "a b c" << std::endl;
 
-        //m->printZ(z, d->size);
+        m->printZ(z, d->size);
 
         m->transform(z);
 
@@ -130,7 +135,7 @@ namespace irtpp
         {
           std::cout << iterations << std::endl;
           std::cout << "a b c" << std::endl;
-          //m->printZ(z, d->size);
+          m->printZ(z, d->size);
           // Ramsay setup
           delete state[0];
           state[0] = state[1];
@@ -142,11 +147,11 @@ namespace irtpp
           m->savePrevValues(z, z_temp, d->size);
           updateProbabilityMatrix();
           /**/
-          //std::cout << " Starting estep " << std::endl;
+          std::cout << " Starting estep " << std::endl;
           estep(p1);
-          //std::cout << " Starting estep " << std::endl;
+          std::cout << " Starting mstep " << std::endl;
           mstep(m, *z, p2);
-          
+
           if(iterations > 5 && (iterations) % 3 == 0)
           {
             ramsay(state);
@@ -173,6 +178,7 @@ namespace irtpp
 
         return return_list;
       }
+
 
     private:
       int iterations;

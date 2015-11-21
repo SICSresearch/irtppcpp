@@ -3,15 +3,11 @@ SRCS = src/type/ghquads.cpp \
 	src/type/dataset.cpp \
 	src/estimation/estep.cpp \
 	src/estimation/mstep.cpp \
-        src/utils/asa111.cpp
+	src/utils/asa111.cpp
 
 LIBRARY = irtppcpp
 SRC_DIR = src
-LIBRARY = irtppcpp
-SRC_DIR = src
-CPPFLAGS = -std=c++11 -march=native -g3 -Wall -fPIC -Wsign-compare -Wunused-function
-#CPPFLAGS = -std=c++11 -march=native -g2 -Wall -fPIC
-INCL =
+CPPFLAGS = -std=c++11 -march=native -g3 -Wall -fPIC
 INCLUDES = -I./$(SRC_DIR) -I./include/SPGO/include/
 OBJS = $(SRCS:.cpp=.o)
 
@@ -27,3 +23,4 @@ lib$(LIBRARY).a : $(OBJS)
 
 clean:
 	$(RM) $(OBJS)
+	$(RM) lib$(LIBRARY).a
