@@ -71,9 +71,9 @@ namespace irtpp
 
         param.gradient[0] = 0;
 
-        for (int k = 0; k < param.theta->nC(); k++)
+        for (int k = 0; k < 40; k++)
         {
-          p = probability((*(param.theta))(0,k), z);
+          p = probability(quads(40)[k], z);
           param.gradient[0] += (((*(param.r))(k,param.index)) - ((*(param.f))(k,0))*(p));
         }
 

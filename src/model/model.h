@@ -7,6 +7,7 @@
 #include <vector>
 #include <utils/andrade.h>
 #include <utils/asa111.h>
+#include <type/ghquads.h>
 
 namespace irtpp
 {
@@ -49,9 +50,9 @@ namespace irtpp
         param.boundary(z);
         //std::cout << "b: " << z[0] << std::endl;
 
-        for (int k = 0; k < param.theta->nC(); ++k)
+        for (int k = 0; k < 40; ++k)
         {
-          tp = param.probability((*param.theta)(0,k),z);
+          tp = param.probability(quads(40)[k],z);
 
           if (tp < 1e-08)
           {
@@ -68,7 +69,7 @@ namespace irtpp
         }
 
         param.sum[0] = -param.sum[0];
-
+        param.LL = param.sum[0];
         return (param.sum);
       }
 

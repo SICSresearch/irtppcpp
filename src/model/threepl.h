@@ -109,17 +109,17 @@ namespace irtpp
         ecp1i=1/(1+exp(z[2]));
         ec=exp(z[2]);
   
-        for (int k = 0; k < param.theta->nC(); k++)
+        for (int k = 0; k < 40; k++)
         {
-          p = probability((*(param.theta))(0,k), z);
-          P_Star = 1/(1+exp(-(z[0]*(*(param.theta))(0,k)+z[1])));
+          p = probability(quads(40)[k], z);
+          P_Star = 1/(1+exp(-(z[0]*quads(40)[k]+z[1])));
 
           W = P_Star * ( 1 - P_Star ); // Numerator
           W /= p * ( 1 - p );// Denominator
 
           factor = (((*(param.r))(k,param.index)) - ((*(param.f))(k,0))*(p)) * W;
 
-          param.gradient[0] -= factor * (*(param.theta))(0,k) * ecp1i;
+          param.gradient[0] -= factor * quads(40)[k] * ecp1i;
           param.gradient[1] -= factor * ecp1i;
           param.gradient[2] -= factor * (ec * (ecp1i*ecp1i) / P_Star);
         }

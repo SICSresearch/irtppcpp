@@ -23,8 +23,6 @@ namespace irtpp
       	delete m;
         delete f;
         delete r;
-        delete weight;
-        delete theta;
         delete probability;
         delete z;
         delete z_temp;
@@ -37,72 +35,73 @@ namespace irtpp
 
       emestimation(model* m, dataset* d)
       {
-        iterations =   0;
-        qnodes = 40;
-        Matrix<double> cuad(qnodes, 2);
+        iterations   = 0;
+        qnodes       = 40;
+        //Matrix<double> cuad(qnodes, 2);
 
-        this->d = d;
-        probability =  new Matrix<double>(qnodes, d->size);
+        this->d      = d;
+        probability  = new Matrix<double>(qnodes, d->size);
 
-        items =  d->size;
-        this->m =  m;
-        param_size =   m->getParamSize();
+        items        = d->size;
+        this->m      = m;
+        param_size   = m->getParamSize();
 
-        f =            new Matrix<double>(qnodes, 1);
-        r =            new Matrix<double>(qnodes, items);
-        theta =    new Matrix<double>(1, qnodes);
-        weight =  new Matrix<double>(1, qnodes);
+        f            = new Matrix<double>(qnodes, 1);
+        r            = new Matrix<double>(qnodes, items);
 
-        z =            m->getZ(items);
-        z_temp =       m->getZ(items);
+        z            = m->getZ(items);
+        z_temp       = m->getZ(items);
         z->reset();
 
-        gradient =     new double[param_size]{0};
-        sum =          new double[1]{0};
-        faux =         new double[weight->nC()];
+        gradient     = new double[param_size]{0};
+        sum          = new double[1]{0};
+        faux         = new double[qnodes];
         counter_temp = new int[d->countItems()];
 
-        for (int k = 0; k < qnodes; k++)
-        {
-          (*theta)(0, k) =  quads(qnodes)[k];
-          (*weight)(0, k) = weights(qnodes)[k];
-        }
-        p1.f =            f;
-        p1.r =            r;
-        p1.weight =       weight;
-        p1.probability =  probability;
-        p1.d =            d;
-        p1.faux =         faux;
+        p1.f            = f;
+        p1.r            = r;
+        p1.probability  = probability;
+        p1.d            = d;
+        p1.faux         = faux;
         p1.counter_temp = counter_temp;
 
-        p2.f =            f;
-        p2.r =            r;
-        p2.d =            d;
-        p2.weight =       weight;
-        p2.theta =        theta;
-        p2.items =        items;
-        p2.param_size =   param_size;
-        p2.gradient =     gradient;
-        p2.sum =          sum;
+        p2.f            = f;
+        p2.r            = r;
+        p2.d            = d;
+        p2.items        = items;
+        p2.param_size   = param_size;
+        p2.gradient     = gradient;
+        p2.sum          = sum;
       }
 
       Matrix<double>* coef()
       {
-        return z;
+        Matrix<double>* result = new Matrix<double>(items, z->nC());
+
+        for(int i = 0; i < z->nR(); i++)
+        {
+          for(int j = 0; j < z->nC(); j++)
+          {
+            (*result)(i, j) = (*z)(i, j);
+          }
+        }
+
+        return result;
+      }
+
+      double LogLik()
+      {
+        return LL;
       }
 
       void updateProbabilityMatrix()
       {
         for (int k = 0; k < qnodes; k++)
         {
-
           for (int i = 0; i < items; i++)
           {
-            (*probability)(k, i) = m->getP_Function()((*theta)(0, k), z->memory[i]);
-            //std::cout << "f(" << (*theta)(0, k) << ", " << z->memory[i][0] << ") = " << (*probability)(k, i) << std::endl;
+            (*probability)(k, i) = m->getP_Function()(quads(40)[k], z->memory[i]);
           }
-
-          //std::cout << std::endl;
         }
       }
 
@@ -124,17 +123,16 @@ namespace irtpp
 
         m->setInitialValues(z, d);
 
-        std::cout << "a b c" << std::endl;
+        //std::cout << "a b c" << std::endl;
 
-        m->printZ(z, d->size);
+        //m->printZ(z, d->size);
 
         m->transform(z);
-
         for (;!(iterations++ > 500 || convergenceSignal);)
         {
-          std::cout << iterations << std::endl;
-          std::cout << "a b c" << std::endl;
-          m->printZ(z, d->size);
+        std::cout<<"Iteration : " << iterations;
+          //std::cout << "a b c" << std::endl;
+          //m->printZ(z, d->size);
           // Ramsay setup
           delete state[0];
           state[0] = state[1];
@@ -146,11 +144,10 @@ namespace irtpp
           m->savePrevValues(z, z_temp, d->size);
           updateProbabilityMatrix();
           /**/
-          std::cout << " Starting estep " << std::endl;
           estep(p1);
-          std::cout << " Starting mstep " << std::endl;
-          mstep(m, *z, p2);
-
+          LL = mstep(m, *z, p2);
+          std::cout<<"LL : "<<LL<<std::endl;
+         // std::cout<<"LL M : "<<LL<<std::endl;
           if(iterations > 5 && (iterations) % 3 == 0)
           {
             ramsay(state);
@@ -159,9 +156,10 @@ namespace irtpp
 
           /**/
           m->calculateError(max_diff, z, z_temp, d->size);
-          std::cout << "mdiff : " << max_diff << std::endl;
+          //std::cout << "mdiff : " << max_diff << std::endl;
           convergenceSignal = max_diff <=  0.0001 ? true : false;
         }
+        std::cout<<"LL : "<<LL<<std::endl;
 
         m->untransform(z);
 
@@ -182,11 +180,10 @@ namespace irtpp
 private:
       int iterations;
       int qnodes;
+      double LL;
       Input input;
       Matrix<double>* f;
       Matrix<double>* r;
-      Matrix<double>* weight;
-      Matrix<double>* theta;
       Matrix<double>* probability;
       Matrix<double>* z;
       Matrix<double>* z_temp;

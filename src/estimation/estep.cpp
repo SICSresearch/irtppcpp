@@ -1,5 +1,6 @@
 #include <estimation/estep.h>
 #include <type/parameter.h>
+#include <type/ghquads.h>
 
 namespace irtpp
 {
@@ -12,6 +13,7 @@ namespace irtpp
         k,
         items,
         counter_set;
+
     Matrix<char>* bitset_list;
     Matrix<int>*  frequency_list;
 
@@ -21,20 +23,20 @@ namespace irtpp
 
     param.r->reset();
     param.f->reset();
-    std::cout<<"Main E loop"<<std::endl;
+
     for (int pattern = 0; pattern < param.d->matrix.size(); pattern++)
     {
       sum = 0.0;
       //Calculate g*(k) for all the k's
       //first calculate the P for each k and store it in the array f aux
-      for (k = 0; k < param.weight->nC(); k++)
+      for (k = 0; k < 40; k++)
       {
 
-              std::cout<<"1"<<std::endl;
-        param.faux[k] = (*(param.weight))(0, k);
+        //std::cout<<"1"<<std::endl;
+        param.faux[k] = weights(40)[k];
         //Calculate the p (iterate over the items in the productory)
         counter_set   = 0;
-        std::cout<<"2"<<std::endl;
+        //std::cout<<"2"<<std::endl;
         for (i = 0; i < items; i++)
         {
           if ((*bitset_list)(pattern,i))
@@ -47,13 +49,13 @@ namespace irtpp
             param.faux[k] *= 1 - (*(param.probability))(k,i);
           }
         }
-        std::cout<<"3"<<std::endl;
+        //std::cout<<"3"<<std::endl;
         //At this point the productory is calculated and faux[k] is equivalent to p(u_j,theta_k)
         //Now multiply by the weight
         sum += param.faux[k];
       }
-      std::cout<<"4"<<std::endl;
-      for (k = 0; k < param.weight->nC(); k++)
+
+      for (k = 0; k < 40; k++)
       {
         param.faux[k] *= ((*frequency_list)(pattern,0)) / sum; //This is g*_j_k
         (*(param.f))(k,0) += param.faux[k];
