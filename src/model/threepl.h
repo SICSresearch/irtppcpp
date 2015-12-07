@@ -1,6 +1,7 @@
 #ifndef THREEPL_H_
 #define THREEPL_H_
 
+
 #include <model/model.h>
 
 namespace irtpp
@@ -15,13 +16,16 @@ namespace irtpp
         {
           z[0] = 0.851;
         }
+        if(z[0] < 0){
+                z[0] = 0.5;
+        }
         if(abs(-z[1]/z[0]) > 5)
         {
           z[1] = 0;
         }
         if(abs(z[2]) > 5)
         {
-          z[2] = 0.1;
+          z[2] = -1.3;
         }
       }
 
@@ -47,7 +51,7 @@ namespace irtpp
           double qb = (*z)(i, 1);
           double qc = (*z)(i, 2);
           double ec = exp(qc);
-          
+
           (*z)(i, 2) = ec / (1 + ec);
           (*z)(i, 1) = -qb / qa; //Transformacion del B   d=-b/a
         }
@@ -57,7 +61,7 @@ namespace irtpp
       {
         double * result = Andrade(data);
         int ifault;
-      
+
         for (int i = 0; i < data->size; i++)
         {
           (*z)(i, 0) = std::sqrt((result[1] * result[1]) / (1.0 - result[1] * result[1]));
@@ -108,7 +112,7 @@ namespace irtpp
 
         ecp1i=1/(1+exp(z[2]));
         ec=exp(z[2]);
-  
+
         for (int k = 0; k < 40; k++)
         {
           p = probability(quads(40)[k], z);
