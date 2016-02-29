@@ -9,7 +9,6 @@ using namespace std;
 namespace irtpp
 {
 
-  //inline void ramsay(double *** args_hist, int size)
   inline void ramsay(Matrix<double>** args_hist)
   {
     double dX,
@@ -23,8 +22,6 @@ namespace irtpp
     {
       for (int j = 0; j < args_hist[0]->nC(); j++)
       {
-        //cout << (*args_hist[0])(i,j) << " ";
-
         dX = (*args_hist[2])(i,j) - (*args_hist[1])(i,j);
         dX2 = (*args_hist[1])(i,j) - (*args_hist[0])(i,j);
         d2X2 = dX - dX2;
@@ -33,10 +30,6 @@ namespace irtpp
         denominator += d2X2 * d2X2;
       }
     }
-    //cout << "#################################" << endl;
-
-    //std::cout << "Num → " << numerator << std::endl;
-    //std::cout << "Den → " << denominator << std::endl;
 
     accel = 1 - sqrt(numerator / denominator);
 

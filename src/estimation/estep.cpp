@@ -31,12 +31,9 @@ namespace irtpp
       //first calculate the P for each k and store it in the array f aux
       for (k = 0; k < 40; k++)
       {
-
-        //std::cout<<"1"<<std::endl;
         param.faux[k] = weights(40)[k];
         //Calculate the p (iterate over the items in the productory)
         counter_set   = 0;
-        //std::cout<<"2"<<std::endl;
         for (i = 0; i < items; i++)
         {
           if ((*bitset_list)(pattern,i))
@@ -49,7 +46,6 @@ namespace irtpp
             param.faux[k] *= 1 - (*(param.probability))(k,i);
           }
         }
-        //std::cout<<"3"<<std::endl;
         //At this point the productory is calculated and faux[k] is equivalent to p(u_j,theta_k)
         //Now multiply by the weight
         sum += param.faux[k];
@@ -59,14 +55,12 @@ namespace irtpp
       {
         param.faux[k] *= ((*frequency_list)(pattern,0)) / sum; //This is g*_j_k
         (*(param.f))(k,0) += param.faux[k];
-        //std::cout << (*(param.f))(k,0) << ", ";
 
         for (i = 0; i < counter_set; i++)
         {
           (*(param.r))(k, param.counter_temp[i] - 1) += param.faux[k];
         }
       }
-      //std::cout << std::endl;
     }
   }
 }

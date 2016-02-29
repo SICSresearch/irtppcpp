@@ -2,6 +2,7 @@
 #define ANDRADE_H_
 
 #include <type/dataset.h>
+#include <cmath>
 
 namespace irtpp
 {
