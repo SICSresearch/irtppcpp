@@ -28,8 +28,6 @@ namespace irtpp
 
       virtual int getParamSize() = 0;
 
-      virtual void printZ(Matrix<double>*, int) = 0;
-
       virtual void transform(Matrix<double>*) = 0;
 
       virtual void untransform(Matrix<double>*) = 0;
@@ -73,7 +71,10 @@ namespace irtpp
         return (param.sum);
       }
 
-      virtual ~model(){}
+      virtual ~model() { delete probability; }
+
+      Matrix<double>* probability;
+      int qnodes;
   };
 
 }

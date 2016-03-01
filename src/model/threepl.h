@@ -1,7 +1,6 @@
 #ifndef THREEPL_H_
 #define THREEPL_H_
 
-
 #include <model/model.h>
 
 namespace irtpp
@@ -128,10 +127,6 @@ namespace irtpp
           param.gradient[2] -= factor * (ec * (ecp1i*ecp1i) / P_Star);
         }
 
-        // std::cout << "z → " << z[0] << "," << z[1] << "," << z[2] << std::endl;
-
-        // std::cout << param.gradient[0] << "," << param.gradient[1] << "," << param.gradient[2] << std::endl;
-
         return param.gradient;
       }
 
@@ -143,17 +138,6 @@ namespace irtpp
       int getParamSize()
       {
         return 3;
-      }
-
-      void printZ(Matrix<double>* z,  int items)
-      {
-        std::cout << "\"a\" \"b\" \"c\"" << std::endl;
-        for(int i = 0; i < items; i++)
-        {
-          std::cout << (*z)(i, 0) << " ";
-          std::cout << (*z)(i, 1) << " ";
-          std::cout << (*z)(i, 2) << std::endl;
-        }
       }
 
       void calculateError(double& max_diff, Matrix<double>* z, Matrix<double>* z_temp, int size)

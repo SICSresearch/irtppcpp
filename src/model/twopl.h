@@ -54,10 +54,8 @@ namespace irtpp
       {
         double exponential = (z[0] * theta) + z[1];
 
-        if (exponential > 35)
-          exponential = 35;
-        else if (exponential < -35)
-          exponential = -35;
+        if (exponential > 35) { exponential = 35; }
+        else if (exponential < -35) { exponential = -35; }
 
         return (1 / (1 + exp(-exponential)));
       }
@@ -84,7 +82,7 @@ namespace irtpp
         {
           p = probability(quads(40)[k], z);
           factor = (((*(param.r))(k,param.index)) - ((*(param.f))(k,0))*(p));
-          
+
           param.gradient[0] -= factor * quads(40)[k];
           param.gradient[1] -= factor;
         }
@@ -100,17 +98,6 @@ namespace irtpp
       int getParamSize()
       {
         return 2;
-      }
-
-      void printZ(Matrix<double>* z,  int items)
-      {
-        std::cout << "\"a\" \"b\" \"c\"" << std::endl;
-        for(int i = 0; i < items; i++)
-        {
-          std::cout << (*z)(i, 0) << " ";
-          std::cout << (*z)(i, 1) << " ";
-          std::cout << 0 << std::endl;
-        }
       }
 
       void calculateError(double& max_diff, Matrix<double>* z, Matrix<double>* z_temp, int size)

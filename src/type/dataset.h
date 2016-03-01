@@ -24,8 +24,8 @@ public:
 
     // Methods
     std::map<std::vector<char>, int>::const_iterator iterator; /**use this when reading in order*/
-    std::map<std::vector<char>, int>::const_iterator begin = matrix.begin();
-    std::map<std::vector<char>, int>::const_iterator end = matrix.end();
+    std::map<std::vector<char>, int>::const_iterator begin;
+    std::map<std::vector<char>, int>::const_iterator end;
     inline void resetIterator(){iterator = matrix.begin();}
     inline char checkEnd(){return (iterator==matrix.end());}
     inline void iterate(){++iterator;}

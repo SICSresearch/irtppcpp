@@ -10,12 +10,11 @@ namespace irtpp
   {
     public:
       
-      static void boundary(double* z){
-        if(abs(z[0]) > 10){
-          //std::cout << "bounded : " << z[0];
+      static void boundary(double* z)
+      {
+        if(abs(z[0]) > 10)
+	{
           z[0] = 0;
-          //std::cout << " to " << z[0] << std::endl;
-
         }
       }
 
@@ -28,7 +27,9 @@ namespace irtpp
         int ifault;
       
         for (int i = 0; i < data->size; i++)
+	{
           (*z)(i, 0) = -(ppnd(result[0], &ifault)) / result[1];
+	}
 
         delete[] result;
       }
@@ -41,16 +42,9 @@ namespace irtpp
       static double probability(double theta, double* z)
       {
         double exponential = ((theta) - (z[0]));
-        //std::cout << " → " << theta << " - " << z[0] << std::endl;
 
-        if (exponential > 35.0)
-          {exponential = 35.0;
-           //std::cout << " æ1 " << std::endl;
-          }
-        else if (exponential < -35.0)
-          {exponential = -35.0;
-            //std::cout << " æ2 " << std::endl;
-          }
+        if (exponential > 35.0) { exponential = 35.0; }
+        else if (exponential < -35.0) { exponential = -35.0; }
 
         return (1 / (1.0 + exp(-exponential)));
       }
@@ -88,16 +82,6 @@ namespace irtpp
       int getParamSize()
       {
         return 1;
-      }
-
-      void printZ(Matrix<double>* z, int items)
-      {
-        for(int i = 0; i < items; i++)
-        {
-          std::cout << 1 << " ";
-          std::cout << (*z)(i, 0) << " ";
-          std::cout << 0 << std::endl;
-        }
       }
 
       void calculateError(double& max_diff, Matrix<double>* z, Matrix<double>* z_temp, int size)

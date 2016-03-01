@@ -23,7 +23,6 @@ namespace irtpp
       	delete m;
         delete f;
         delete r;
-        delete probability;
         delete z;
         delete z_temp;
 
@@ -36,18 +35,18 @@ namespace irtpp
       emestimation(model* m, dataset* d)
       {
         iterations   = 0;
-        qnodes       = 40;
+        m->qnodes       = 40;
         //Matrix<double> cuad(qnodes, 2);
 
         this->d      = d;
-        probability  = new Matrix<double>(qnodes, d->size);
+        m->probability  = new Matrix<double>(m->qnodes, d->size);
 
         items        = d->size;
         this->m      = m;
         param_size   = m->getParamSize();
 
-        f            = new Matrix<double>(qnodes, 1);
-        r            = new Matrix<double>(qnodes, items);
+        f            = new Matrix<double>(m->qnodes, 1);
+        r            = new Matrix<double>(m->qnodes, items);
 
         z            = m->getZ(items);
         z_temp       = m->getZ(items);
@@ -55,12 +54,12 @@ namespace irtpp
 
         gradient     = new double[param_size]{0};
         sum          = new double[1]{0};
-        faux         = new double[qnodes];
+        faux         = new double[m->qnodes];
         counter_temp = new int[d->countItems()];
 
         p1.f            = f;
         p1.r            = r;
-        p1.probability  = probability;
+        p1.probability  = m->probability;
         p1.d            = d;
         p1.faux         = faux;
         p1.counter_temp = counter_temp;
@@ -88,6 +87,26 @@ namespace irtpp
 
         return result;
       }
+      
+      Matrix<double>* getF(){
+        Matrix<double>* result = new Matrix<double>(m->qnodes, 1);
+        for(int i = 0 ; i < m->qnodes ; i++){
+          (*result)(i,0) = (*f)(i,0);
+        }
+        return result;
+      }
+      
+      Matrix<double>* getR(){
+        Matrix<double>* result = new Matrix<double>(m->qnodes, items);
+        for(int i = 0; i < m->qnodes; i++)
+        {
+          for(int j = 0; j < items; j++)
+          {
+            (*result)(i, j) = (*r)(i, j);
+          }
+        }
+        return result;
+      }
 
       double LogLik()
       {
@@ -96,18 +115,18 @@ namespace irtpp
 
       void updateProbabilityMatrix()
       {
-        for (int k = 0; k < qnodes; k++)
+        for (int k = 0; k < m->qnodes; k++)
         {
           for (int i = 0; i < items; i++)
           {
-            (*probability)(k, i) = m->getP_Function()(quads(40)[k], z->memory[i]);
+            (*m->probability)(k, i) = m->getP_Function()(quads(40)[k], z->memory[i]);
           }
         }
       }
 
       void ** estimate()
       {
-        void ** return_list = new void*[3];
+        void ** return_list = new void*[5];
 
         Matrix<double>* state[3];
 
@@ -123,16 +142,9 @@ namespace irtpp
 
         m->setInitialValues(z, d);
 
-        //std::cout << "a b c" << std::endl;
-
-        //m->printZ(z, d->size);
-
         m->transform(z);
         for (;!(iterations++ > 500 || convergenceSignal);)
         {
-        std::cout<<"Iteration : " << iterations;
-          //std::cout << "a b c" << std::endl;
-          //m->printZ(z, d->size);
           // Ramsay setup
           delete state[0];
           state[0] = state[1];
@@ -146,8 +158,6 @@ namespace irtpp
           /**/
           estep(p1);
           LL = mstep(m, *z, p2);
-          std::cout<<"LL : "<<LL<<std::endl;
-         // std::cout<<"LL M : "<<LL<<std::endl;
           if(iterations > 5 && (iterations) % 3 == 0)
           {
             ramsay(state);
@@ -156,18 +166,16 @@ namespace irtpp
 
           /**/
           m->calculateError(max_diff, z, z_temp, d->size);
-          //std::cout << "mdiff : " << max_diff << std::endl;
           convergenceSignal = max_diff <=  0.0001 ? true : false;
         }
-        std::cout<<"LL : "<<LL<<std::endl;
 
         m->untransform(z);
 
-        m->printZ(z, d->size);
-
         return_list[0] = new int(iterations);
         return_list[1] = new bool(convergenceSignal);
-        return_list[2] = probability;
+        return_list[2] = m->probability;
+        return_list[3] = f;
+        return_list[4] = r;
 
         delete state[0];
         delete state[1];
@@ -179,12 +187,10 @@ namespace irtpp
 
 private:
       int iterations;
-      int qnodes;
       double LL;
       Input input;
       Matrix<double>* f;
       Matrix<double>* r;
-      Matrix<double>* probability;
       Matrix<double>* z;
       Matrix<double>* z_temp;
       e_parameter     p1;

@@ -13,6 +13,8 @@ namespace irtpp{
 
   dataset::dataset(int size)
   {
+    begin = matrix.begin();
+    end = matrix.end();
     this->size = size;
     count_set_bits = NULL;
     bitset_list = NULL;
@@ -53,10 +55,10 @@ namespace irtpp{
     {
       for (int var = 0; var < size; ++var)
       {
-        std::cout << iterator->first[var];
+        //std::cout << iterator->first[var];
       }
 
-      std::cout << " " << iterator->second << std::endl;
+      //std::cout << " " << iterator->second << std::endl;
     }
   }
 
@@ -66,7 +68,7 @@ namespace irtpp{
     if (count_set_bits == NULL)
     {
       count_set_bits = new int[matrix.size()];
-      for (uint i = 0; i < matrix.size(); i++)
+      for (int i = 0; i < matrix.size(); i++)
       {
         count_set_bits[i] = -1;
       }
